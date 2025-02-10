@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .code-box-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .code-box {
+            font-size: 32px;
+            font-weight: bold;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .copy-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+        .generate-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .generate-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Lottery Panel</h1>
+    <p>Click the button below to generate an 8-character code for your store:</p>
+    
+    <div class="code-box-wrapper">
+        <div class="code-box" id="code-box">-</div>
+        <button class="copy-btn" onclick="copyCode()">Copy</button>
+    </div>
+    
+    <button class="generate-btn" onclick="generateCode()">Generate Code</button>
+</div>
+
+<script>
+    // Function to generate and store the 8-character code
+    function generateCode() {
+        // Generate two random letters
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const randomLetters = () => letters.charAt(Math.floor(Math.random() * letters.length));
+
+        // Generate two random digits
+        const randomDigits = () => Math.floor(Math.random() * 10);
+
+        // Create the 8-character code format (2 letters, 2 digits, 2 letters, 2 digits)
+        const code = randomLetters() + randomLetters() + randomDigits() + randomDigits() + randomLetters() + randomLetters() + randomDigits() + randomDigits();
+
+        // Save the code in localStorage
+        localStorage.setItem('storeCode', code);
+
+        // Display the generated code in the HTML element
+        document.getElementById('code-box').innerText = code;
+    }
+
+    // On page load, check if there is a code saved in localStorage
+    window.onload = function() {
+        const savedCode = localStorage.getItem('storeCode');
+        if (savedCode) {
+            // Display the saved code if it exists
+            document.getElementById('code-box').innerText = savedCode;
+        }
+    }
+
+    // Function to copy the code to the clipboard
+    function copyCode() {
+        const codeText = document.getElementById('code-box').innerText;
+        if (codeText !== '-') {
+            navigator.clipboard.writeText(codeText).then(function() {
+                alert('Code copied to clipboard!');
+            }).catch(function(error) {
+                alert('Failed to copy code: ' + error);
+            });
+        } else {
+            alert('Please generate a code first.');
+        }
+    }
+</script>
+
+</body>
+</html>

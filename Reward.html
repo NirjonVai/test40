@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Rewards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0a3a69;
+        }
+
+        header {
+            display: flex; 
+            align-items: center; 
+            padding: 12px;
+            background: #125392;
+            color: #fff;
+            position: relative; 
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1; 
+            text-align: center; 
+        }
+
+        .back-button {
+            padding: 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: transparent; 
+            border: none;
+            display: flex; 
+            align-items: center; 
+        }
+
+        .back-button i {
+            font-size: 20px; 
+        }
+
+        .wallet-box {
+            width: 280px;
+            margin: auto;
+            background: #094887;
+            padding: 1px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #username-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        #username-display i {
+            font-size: 50px; 
+            color: #5cf; 
+            margin-bottom: 5px;
+        }
+
+        #username-text {
+            color: #fff; 
+            font-size: 16px; 
+            font-weight: bold;
+        }
+
+        #wallet-earnings {
+            text-align: center;
+            color: #e7d050;
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .earnings p {
+            font-size: 15px;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 270px;
+            height: 270px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel {
+            position: absolute;
+            width: 94%;
+            height: 94%;
+            border-radius: 50%;
+            background: conic-gradient(#f00 0% 12.5%, #ff8c00 12.5% 25%, #ffff00 25% 37.5%, #008000 37.5% 50%, #0000ff 50% 62.5%, #800080 62.5% 75%, #ffc0cb 75% 87.5%, #800000 87.5% 100%);
+            transition: transform 3s ease-out;
+        }
+
+        .spin-btn-container {
+            display: flex;
+            justify-content: center; 
+            margin-top: 20px; 
+        }
+
+        .spin-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .footer {
+            position: fixed;
+            background-color: #125392da;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .footer-content {
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            margin-top: 10px;
+        }
+
+        .footer-links p {
+            display: inline; 
+            color: white;
+            margin: 0 5px;
+            padding: 2px 5px;
+            font-size: 14px;
+        }
+
+        .footer-links p:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: #f0f0f0; 
+            border-radius: 4px; 
+        }
+
+        .popup {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: #fff;
+            width: 90%;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .popup h2 {
+            margin-bottom: 7px;
+            color: #333;
+        }
+
+        .popup i {
+            font-size: 40px;
+            color: #ffa431; 
+            margin-bottom: 15px;
+        }
+
+        .popup .fa-triangle-exclamation {
+            color: red; 
+        }
+
+        .popup button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #won-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50; 
+            margin-top: 5px;
+        }
+
+        #bonus-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333; 
+            margin-top: 1px;
+            margin-bottom: 10px;
+        }
+
+        #Spin-code {
+            display: none;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+        .spin-box-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spin-code-input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        .submit-code-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Custom alert message styles */
+        .alert-message {
+            background-color: #ff9800;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            display: none;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <button type="button" class="back-button" onclick="goToHome()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>Lottery</h1>
+    </header>
+
+    <!-- Custom alert message -->
+    <div id="alert-message" class="alert-message"></div>
+
+    <div class="wallet-box">
+        <div id="username-display" class="username">
+            <i class="fa-solid fa-circle-user"></i>
+            <span id="username-text"></span>
+        </div>
+        <div class="earnings">
+            <p>Available Balance</p>
+            <p id="wallet-earnings"></p>
+        </div>
+    </div>
+
+    <div class="spin-box-section" id="spin-box-section">
+      <div id="spin-code-box">
+        <input type="text" id="spin-code-input" class="spin-code-input" placeholder="Enter Spin Code">
+        <button class="submit-code-btn" onclick="submitSpinCode()">Submit Code</button>
+      </div>
+    </div>
+
+    <div id="Spin-code"></div>
+
+    <div class="wheel-container">
+        <div id="wheel" class="wheel"></div>
+    </div>
+
+    <div class="spin-btn-container">
+        <button class="spin-btn" id="spin-btn" onclick="spinWheel()">START SPIN</button>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <i class="fa-solid fa-trophy"></i>
+            <h2 id="popup-title">Congratulations!</h2>
+            <p id="won-amount"></p>
+            <p id="bonus-text"></p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            © 2025 All Rights Reserved.
+        </div>
+        <div class="footer-links">
+            <p>Privacy Policy</p> |
+            <p>Terms of Service</p> |
+            <p>Contact Us</p>
+        </div>
+    </footer>
+
+    <script>
+        let totalEarnings = 0;
+        let username = localStorage.getItem("username");
+        let spinsLeft = localStorage.getItem(`${username}_spinsLeft`) || 0;
+
+        function initializeUserData() {
+            if (username) {
+                totalEarnings = parseFloat(localStorage.getItem(`${username}_earnings`)) || 0;
+            }
+        }
+
+        function updateDisplayedEarnings() {
+            const walletEarningsElement = document.getElementById('wallet-earnings');
+            walletEarningsElement.textContent = ` ৳${Math.floor(totalEarnings)}`;
+        }
+
+        function displayGeneratedCode() {
+            const code = localStorage.getItem('storeCode');
+            if (code) {
+                document.getElementById('Spin-code').innerText = `Spin Unlock Code: ${code}`;
+            }
+        }
+
+        let lastSpinDegree = 0;
+
+        function spinWheel() {
+            if (spinsLeft <= 0) {
+                showNoSpinsPopup(); // Show popup when no spins left
+                return;
+            }
+
+            const wheel = document.getElementById("wheel");
+            const spinBtn = document.getElementById("spin-btn");
+
+            let spinDegree = lastSpinDegree + Math.floor(Math.random() * 360) + 1800;
+            lastSpinDegree = spinDegree;
+
+            wheel.style.transform = `rotate(${spinDegree}deg)`;
+
+            spinsLeft -= 1;
+            localStorage.setItem(`${username}_spinsLeft`, spinsLeft);
+
+            setTimeout(function() {
+                let bonus = getBonusWithChance();
+                totalEarnings += bonus;
+                localStorage.setItem(`${username}_earnings`, totalEarnings);
+                updateDisplayedEarnings();
+                showBonusPopup(bonus);
+            }, 3000); 
+        }
+
+        function showNoSpinsPopup() {
+            const popup = document.getElementById('popup');
+            const popupTitle = document.getElementById('popup-title');
+            const bonusText = document.getElementById('bonus-text');
+            const wonAmount = document.getElementById('won-amount');
+            const popupIcon = document.querySelector('.popup-content i');
+
+            popupTitle.textContent = "No Spins Left!";
+            bonusText.textContent = "Please submit a valid spin code to get more spins.";
+            wonAmount.textContent = "";
+            
+            // Change icon to error icon
+            popupIcon.classList.remove('fa-trophy');
+            popupIcon.classList.add('fa-triangle-exclamation');
+            
+            popup.style.display = 'flex';
+        }
+
+        function getBonusWithChance() {
+            const randomNum = Math.random();
+            if (randomNum < 0.6) {
+                return 0;
+            } else if (randomNum < 0.95) {
+                return Math.floor(Math.random() * 5) + 1;
+            } else if (randomNum < 0.98) {
+                return Math.floor(Math.random() * 46) + 5;
+            } else {
+                return Math.floor(Math.random() * 50) + 51;
+            }
+        }
+
+        function showBonusPopup(bonus) {
+            const wonAmount = document.getElementById('won-amount');
+            const bonusText = document.getElementById('bonus-text');
+            const popupTitle = document.getElementById('popup-title');
+
+            wonAmount.textContent = `You won ৳${bonus}!`;
+
+            if (bonus === 0) {
+                popupTitle.textContent = "Bad luck!";
+                bonusText.textContent = "Try again! You'll win soon!";
+            } else if (bonus >= 1 && bonus <= 5) {
+                popupTitle.textContent = "Congratulations!";
+                bonusText.textContent = "Nice! You're doing great!";
+            } else if (bonus >= 5 && bonus <= 50) {
+                popupTitle.textContent = "Congratulations!";
+                bonusText.textContent = "Awesome! You won a nice amount!";
+            } else {
+                popupTitle.textContent = "Congratulations!";
+                bonusText.textContent = "Incredible! Big win! Keep it up!";
+            }
+
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function submitSpinCode() {
+            const spinCodeInput = document.getElementById('spin-code-input');
+            const enteredCode = spinCodeInput.value.trim();
+            const storedCode = localStorage.getItem('storeCode');
+            const alertMessage = document.getElementById('alert-message');
+
+            if (enteredCode === storedCode) {
+                if (spinsLeft <= 0) {
+                    spinsLeft = 5;  // Reset spins to 5
+                    localStorage.setItem(`${username}_spinsLeft`, spinsLeft);
+                    document.getElementById('spin-box-section').style.display = 'none';  // Hide spin box section
+                }
+
+                alertMessage.textContent = "Submit Successful!";
+                alertMessage.style.backgroundColor = "#4CAF50"; // Success color
+                alertMessage.style.display = 'block';
+
+                setTimeout(function() {
+                    alertMessage.style.display = 'none';
+                }, 3000);
+            } else {
+                alertMessage.textContent = "Code is wrong, but fixable.!";
+                alertMessage.style.backgroundColor = "#f44336"; // Error color
+                alertMessage.style.display = 'block';
+
+                setTimeout(function() {
+                    alertMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function resetSpinsAt830PM() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            if (hours === 20 && minutes === 30) {
+                if (username) {
+                    spinsLeft = 0; // Reset spins to 0
+                    localStorage.setItem(`${username}_spinsLeft`, spinsLeft);
+                    document.getElementById('spin-box-section').style.display = 'block'; // Show the spin box again
+                }
+            }
+        }
+
+        setInterval(resetSpinsAt830PM, 60000); // Check every minute
+
+        window.onload = function() {
+            initializeUserData();
+            updateDisplayedEarnings();
+            displayGeneratedCode();
+
+            if (username) {
+                document.getElementById("username-display").textContent = ` ${username}`;
+            }
+
+            // Show or hide spin box based on spinsLeft
+            const spinBoxSection = document.getElementById("spin-box-section");
+            if (spinsLeft > 0) {
+                spinBoxSection.style.display = 'none';
+            } else {
+                spinBoxSection.style.display = 'block';
+            }
+        };
+
+        function goToHome() {
+            window.location.href = "home.html"; 
+        }
+    </script>
+
+</body>
+</html>
